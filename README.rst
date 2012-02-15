@@ -9,7 +9,7 @@ Description
 A collection of various utitilies, scripts, etc maintained by ZCA members
 
 
-VMware Application to VirtualBox Converter
+VMware Appliance to VirtualBox Converter
 ==========================================
 @TODO: Link To utility specific documentation
 
