@@ -28,14 +28,14 @@ on the manual steps, or maybe even fix the script and let me know the changes
 so I can incorporate them::
   
   cd /tmp
-  wget http://raw.github.com/ZCA/zenoss_zca_utils/master/source/scripts/vmware_appliance_to_virtualbox/vmwware_appliance_to_virtualbox.sh
+  wget https://raw.github.com/ZCA/zenoss_zca_utils/master/source/scripts/vmware_appliance_to_virtualbox/vmwware_appliance_to_virtualbox.sh
   chmod +x vmwware_appliance_to_virtualbox.sh
   ./vmwware_appliance_to_virtualbox.sh
 
 At this point the VM should be converted and booting up. Once it has finished booting, login to the console and run the following commands *from within* the virtual machine::
 
   cd /tmp
-  wget http://raw.github.com/ZCA/zenoss_zca_utils/master/source/scripts/vmware_appliance_to_virtualbox/replace_tools_with_additions.sh
+  wget https://raw.github.com/ZCA/zenoss_zca_utils/master/source/scripts/vmware_appliance_to_virtualbox/replace_tools_with_additions.sh
   chmod +x replace_tools_with_additions.sh
   ./replace_tools_with_additions.sh
 
