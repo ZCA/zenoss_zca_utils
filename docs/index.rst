@@ -6,8 +6,8 @@
 Zenoss ZCA Utilities
 ============================================
 
-.. contents::
-   :depth: 3
+.. toctree::
+   :maxdepth: 3
 
    Converting_Zenoss_VMWare_Virtual_Appliance_to_VirtualBox
 
