@@ -9,16 +9,11 @@ Zenoss ZCA Utilities
 .. contents::
    :depth: 3
 
-   docs/Converting_Zenoss_VMWare_Virtual_Appliance_to_VirtualBox
+   Converting_Zenoss_VMWare_Virtual_Appliance_to_VirtualBox
 
 Description
 ===========
 A collection of various utitilies, scripts, etc maintained by ZCA members
-
-
-
-Utility #2
-==========
 
 
 Indices and tables
