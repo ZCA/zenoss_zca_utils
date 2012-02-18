@@ -1,6 +1,9 @@
 ========================================================
 Converting Zenoss VMWare Virtual Appliance to VirtualBox
 ========================================================
+"Author": David Petzel
+"Date": 02/18/2012
+
 .. contents::
    :depth: 4
    
@@ -14,6 +17,30 @@ Instructions
 
 Linux
 -----
+
+Scripted
+********
+If you want to save your save some copy/paste time a script is available 
+that should automatically handle most of the steps below. 
+The following short set of commands shoulds get you up an running. 
+If you have an issues with the script, you should be able to fall back 
+on the manual steps, or maybe even fix the script and let me know the changes 
+so I can incorporate them::
+  
+  cd /tmp
+  wget http://raw.github.com/ZCA/zenoss_zca_utils/master/source/scripts/vmware_appliance_to_virtualbox/vmwware_appliance_to_virtualbox.sh
+  chmod +x vmwware_appliance_to_virtualbox.sh
+  ./vmwware_appliance_to_virtualbox.sh
+
+At this point the VM should be converted and booting up. Once it has finished booting, login to the console and run the following commands *from within* the virtual machine::
+
+  cd /tmp
+  wget http://raw.github.com/ZCA/zenoss_zca_utils/master/source/scripts/vmware_appliance_to_virtualbox/replace_tools_with_additions.sh
+  chmod +x replace_tools_with_additions.sh
+  ./replace_tools_with_additions.sh
+
+Manual
+******
 
 * Download the existing VMware Image::
 
@@ -63,6 +90,14 @@ Linux
 
 Windows
 -------
+
+Scripted
+********
+Maybe some day
+
+Manual
+******
+
 Lets get our powershell on...All commands are run in a power shell prompt
 
 * Setup some Variables::
