@@ -20,7 +20,7 @@ Linux
 
 Scripted
 ********
-If you want to save your save some copy/paste time a script is available 
+If you want to save yourself some copy/paste time, a script is available 
 that should automatically handle most of the steps below. 
 The following short set of commands shoulds get you up an running. 
 If you have an issues with the script, you should be able to fall back 
