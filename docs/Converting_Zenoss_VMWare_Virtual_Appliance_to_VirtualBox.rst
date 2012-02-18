@@ -1,8 +1,8 @@
 ========================================================
 Converting Zenoss VMWare Virtual Appliance to VirtualBox
 ========================================================
-"Author": David Petzel
-"Date": 02/18/2012
+:Author:: David Petzel
+:Date: 02/18/2012
 
 .. contents::
    :depth: 4
