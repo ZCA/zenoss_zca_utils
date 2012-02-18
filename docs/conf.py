@@ -213,7 +213,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'zenosszcautils', u'Zenoss ZCA Utils Documentation',
+    ('index', 'zenosszcautils', u'Zenoss ZCA Utilities Documentation',
      [u'ZCA'], 1)
 ]
 
@@ -227,7 +227,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'ZenossZCAUtils', u'Zenoss ZCA Utils Documentation',
+  ('index', 'ZenossZCAUtils', u'Zenoss ZCA Utilities Documentation',
    u'ZCA', 'ZenossZCAUtils', 'One line description of project.',
    'Miscellaneous'),
 ]
@@ -245,7 +245,7 @@ texinfo_documents = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'Zenoss ZCA Utils'
+epub_title = u'Zenoss ZCA Utilitiess'
 epub_author = u'ZCA'
 epub_publisher = u'ZCA'
 epub_copyright = u'2012, ZCA'
