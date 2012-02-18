@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Zenoss ZCA Utilitiess'
+project = u'Zenoss ZCA Utilities'
 copyright = u'2012, ZCA'
 
 # The version info for the project you're documenting, acts as replacement for
