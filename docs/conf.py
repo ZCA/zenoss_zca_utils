@@ -213,7 +213,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'zenosszcautils', u'Zenoss ZCA Utilities Documentation',
+    ('index', 'zenosszcautilitiess', u'Zenoss ZCA Utilities Documentation',
      [u'ZCA'], 1)
 ]
 
@@ -227,8 +227,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'ZenossZCAUtils', u'Zenoss ZCA Utilities Documentation',
-   u'ZCA', 'ZenossZCAUtils', 'One line description of project.',
+  ('index', 'ZenossZCAUtilitiess', u'Zenoss ZCA Utilities Documentation',
+   u'ZCA', 'ZenossZCAUtilitiess', 'One line description of project.',
    'Miscellaneous'),
 ]
 
