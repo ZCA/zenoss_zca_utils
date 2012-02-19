@@ -16,12 +16,12 @@ ZenPack source available on GitHub as is being recommended by Zenoss Inc.
 
 There has been some discussions around allowing the ZCA to accept the standalone
 egg file and will handle getting the ZenPack into GitHub. This document will 
-outline the steps to take the egg and git into GitHub under the ZCA organization.
+outline the steps to take the egg and get into GitHub under the ZCA organization.
 
 Its worth noting that you *do* need to do the conversion on a machine running
 zenoss. I'd suggest you get the git client installed on your zenoss machine.
 I personally think its easiest to also setup an SSH key pair under the zenoss
-user on my zenoss development instance and link that key to my account
+user on my zenoss development instance and link that key to my account.
 
 
 Assumptions
@@ -42,9 +42,10 @@ an SSH key pair. I'd suggest setting up a key pair under your zenoss user login.
 has a pretty good document that covers this so I won't re-invent the wheel.
 http://help.github.com/linux-set-up-git/
 
-I'd suggest you do make sure to setup GitHub token, as it will allow us to do everything in
+I'd suggest you do make sure to setup your GitHub token, as it will allow us to do everything in
 conversion process from the command line on our Zenoss box, without having to drop out to
-to the web UI to create the repo on GitHub when the time comes.
+to the web UI to create the repo on GitHub when the time comes. Additionally setting up that API 
+should allow a script to be written at a future date which can ease all of the steps below.
 
 Do the Conversion
 ------
@@ -52,20 +53,25 @@ The first thing we need to do is install the egg::
 
   zenpack --install=ZenPacks.community.gitify-1.0-py2.6.egg
 
-Now, following the steps outlined in the Developers Guide, switch the pack to development mode
-and relocate it::
+Now, switch the pack to development mode. This step is also discussed in the Developers guide::
 
   cp $ZENHOME/Products/ZenModel/ZenPackTemplate/* $ZENHOME/ZenPacks/ZenPacks.community.gitify-1.0-py2.6.egg
 
-Now Export. Running the following in a zendmd shell. What I found was that after doing the switch to 
+
+Open a zendmd shell::
+
+  zendmd
+
+Run the following snppet in a zendmd shell. What I found was that after doing the switch to 
 development mode, the setup.py that gets created has an empty name field, which of course makes sense
 given it came from a template, however with that blank name, the relocate fails as it tries to use
 the setup.py with the blank name. The followig snippet, populates the setup.py based on the info
 that was contained in the original egg::
 
   for pack in dmd.ZenPackManager.packs():
-  if pack.id == "ZenPacks.community.gitify":
-    pack.writeSetupValues()
+    if pack.id == "ZenPacks.community.gitify":
+      pack.writeSetupValues()
+      exit()
 
 Next relocate the files outside of the zenoss directory::
 
@@ -100,7 +106,9 @@ Make your local git repo aware of the version on GitHub (no actualy interaction 
 
 Now we actually create the repo on GitHub. You can do this in the Web UI or using the API::
 
-  curl -k -F 'login=YourUserName' -F 'token=YourAPIToken' -i https://github.com/api/v2/json/repos/create -F 'name=ZenPacks.community.gitify' -F 'description=Fill in a description for this ZenPack'
+  github_user=`git config --global github.user`
+  github_key=`git config --global github.token`
+  curl -k -F "login=$github_user" -F "token=$github_key" -i https://github.com/api/v2/json/repos/create -F 'name=ZCA/ZenPacks.community.gitify' -F 'description=Fill in a description for this ZenPack'
   
 You will know this works based on the response. You'll see some JSON indicating success. Now its time to push everything up to GitHub::
 
@@ -108,6 +116,7 @@ You will know this works based on the response. You'll see some JSON indicating 
 
 You can now remove the pack from your installation::
 
+  cd /tmp
   zenpack --remove=ZenPacks.community.gitify
 
 That should just above cover it. You can test by checking out the new git repo into a seperate directory
@@ -117,4 +126,5 @@ and doing a development install::
   cd /tmp/install_test
   git clone git://github.com/ZCA/ZenPacks.community.gitify.git
   zenpack --link --install=ZenPacks.community.gitify
-  
+  zenpack --list
+  zenpack --remove=ZenPacks.community.gitify

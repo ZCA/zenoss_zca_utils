@@ -10,6 +10,7 @@ Zenoss ZCA Utilities
    :maxdepth: 3
 
    Converting_Zenoss_VMWare_Virtual_Appliance_to_VirtualBox
+   zenpack_egg_to_github
 
 Description
 ===========
