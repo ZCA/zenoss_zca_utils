@@ -5,7 +5,7 @@ Zenpack Egg to Github
 :Date: 02/18/2012
 
 .. contents::
-   :depth: 2
+   :depth: 3
 
 Purpose
 ======
@@ -56,9 +56,22 @@ Now, following the steps outlined in the Developers Guide, switch the pack to de
 and relocate it::
 
   cp $ZENHOME/Products/ZenModel/ZenPackTemplate/* $ZENHOME/ZenPacks/ZenPacks.community.gitify-1.0-py2.6.egg
-  mkdir /tmp/ZenPacks.community.gitify
+
+Now Export. Running the following in a zendmd shell. What I found was that after doing the switch to 
+development mode, the setup.py that gets created has an empty name field, which of course makes sense
+given it came from a template, however with that blank name, the relocate fails as it tries to use
+the setup.py with the blank name. The followig snippet, populates the setup.py based on the info
+that was contained in the original egg::
+
+  for pack in dmd.ZenPackManager.packs():
+  if pack.id == "ZenPacks.community.gitify":
+    pack.writeSetupValues()
+
+Next relocate the files outside of the zenoss directory::
+
   cp -r $ZENHOME/ZenPacks/ZenPacks.community.gitify-1.0-py2.6.egg /tmp/ZenPacks.community.gitify
   zenpack --link --install=/tmp/ZenPacks.community.gitify
+
 
 Now lets initialize a git repo. This will be a local git repo and in no way tied to GitHub yet::
   
@@ -92,6 +105,10 @@ Now we actually create the repo on GitHub. You can do this in the Web UI or usin
 You will know this works based on the response. You'll see some JSON indicating success. Now its time to push everything up to GitHub::
 
   git push -u origin master
+
+You can now remove the pack from your installation::
+
+  zenpack --remove=ZenPacks.community.gitify
 
 That should just above cover it. You can test by checking out the new git repo into a seperate directory
 and doing a development install::
