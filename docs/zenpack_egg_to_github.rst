@@ -5,7 +5,7 @@ Zenpack Egg to Github
 :Date: 02/18/2012
 
 .. contents::
-   :depth: 3
+   :depth: 4
 
 Purpose
 ======
