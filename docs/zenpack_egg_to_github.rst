@@ -49,6 +49,16 @@ should allow a script to be written at a future date which can ease all of the s
 
 Do the Conversion
 ------
+
+Automated
+*********
+Save the egg file in /tmp/ and run the following::
+
+  wget https://raw.github.com/ZCA/zenoss_zca_utils/master/source/scripts/gitify_zenpack/gitify_zenpack.sh
+  sh zenpack_egg_to_git.sh <eggfile_name>
+
+Manual
+******
 The first thing we need to do is install the egg::
 
   zenpack --install=ZenPacks.community.gitify-1.0-py2.6.egg
