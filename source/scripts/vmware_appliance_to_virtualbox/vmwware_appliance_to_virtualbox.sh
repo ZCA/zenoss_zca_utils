@@ -61,6 +61,10 @@ if [ ! -f $vmBasePath/$vmName/$baseFileName.vmdk ]; then
 	VBoxManage storagectl $vmName --name "IDE Controller" --add ide --controller PIIX4
 	VBoxManage storageattach $vmName --storagectl "IDE Controller" --type dvddrive --port 1 --device 0 --medium $isoLocation
 	
+	echo "Adding Port Forwards for SSH and Zope-HTTP"
+	VBoxManage controlvm $vmName natpf1 "SSH,tcp,,8022,,22"
+	VBoxManage controlvm $vmName natpf1 "ZOPE,tcp,,8080,,8080"
+	
 	echo "Copying Extracted VMDK and attaching it"
 	cp $baseFileName/$baseFileName.vmdk $vmBasePath/$vmName/
 	VBoxManage storagectl $vmName --name "SCSI Controller" --add scsi --controller LsiLogic
