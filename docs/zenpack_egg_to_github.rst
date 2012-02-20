@@ -55,7 +55,7 @@ Automated
 Save the egg file in /tmp/ and run the following::
 
   wget https://raw.github.com/ZCA/zenoss_zca_utils/master/source/scripts/gitify_zenpack/gitify_zenpack.sh
-  sh zenpack_egg_to_git.sh <eggfile_name>
+  sh gitify_zenpack.sh <eggfile_name>
 
 Manual
 ******
