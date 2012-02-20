@@ -72,6 +72,11 @@ Manual
    VBoxManage storagectl $VM_NAME --name "SCSI Controller" --add scsi --controller LsiLogic
    VBoxManage storageattach $VM_NAME --storagectl "SCSI Controller" --type hdd --port 0 --medium $VM_BASE_PATH/$VM_NAME/zenoss-4.1.70-1427-x86_64.vmdk
    
+* Some Optional Port forwards I find useful::
+   
+   VBoxManage controlvm $VM_NAME natpf1 "SSH,tcp,,8022,,22"
+   VBoxManage controlvm $VM_NAME natpf1 "ZOPE,tcp,,8080,,8080"
+
 * Add a DVD/CD Drive (At a minimum you'll need this for installing Guest Additions)::
 
    VBoxManage storagectl $VM_NAME --name "IDE Controller" --add ide --controller PIIX4
