@@ -60,7 +60,7 @@ yum -y install tk unixODBC erlang rabbitmq-server memcached perl-DBI net-snmp \
 net-snmp-utils gmp libgomp libgcj.x86_64 libxslt liberation-fonts
 
 echo "Configuring and Starting some Base Services"
-for servce in rabbitmq-server memcached snmpd mysql; do
+for service in rabbitmq-server memcached snmpd mysql; do
 	/sbin/chkconfig $service on
 	/sbin/service $service start
 done
