@@ -21,6 +21,7 @@ zenoss_arch="x86_64"
 zenoss_rpm_file="zenoss-$zenoss_build.el5.$zenoss_arch.rpm"
 zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.el5.$zenoss_arch.rpm"
 zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$zenoss_build"
+zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 
 cd /tmp
 
@@ -40,6 +41,12 @@ for file in $zenoss_rpm_file $zenpack_rpm_file;do
 		wget $zenoss_base_url/$file
 	fi
 done
+
+
+if [ `rpm -qa gpg-pubkey* | grep -c "aa5a1ad7-4829c08a"` -eq 0  ];then
+	echo "Importing Zenoss GPG Key"
+	rpm --import $zenoss_gpg_key
+fi
 
 for file in $mysql_client_rpm $mysql_server_rpm $mysql_shared_rpm;
 do
