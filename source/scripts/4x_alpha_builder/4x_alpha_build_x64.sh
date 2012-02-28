@@ -16,7 +16,7 @@ mysql_client_rpm="MySQL-client-5.5.20-1.linux2.6.x86_64.rpm"
 mysql_server_rpm="MySQL-server-5.5.20-1.linux2.6.x86_64.rpm"
 mysql_shared_rpm="MySQL-shared-5.5.20-1.linux2.6.x86_64.rpm"
 
-zenoss_build="4.1.70-1441"
+zenoss_build="4.1.70-1448"
 zenoss_arch="x86_64"
 zenoss_rpm_file="zenoss-$zenoss_build.el5.$zenoss_arch.rpm"
 zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.el5.$zenoss_arch.rpm"
