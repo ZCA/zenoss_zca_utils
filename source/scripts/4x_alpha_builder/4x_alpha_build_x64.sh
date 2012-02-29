@@ -16,6 +16,9 @@ mysql_client_rpm="MySQL-client-5.5.20-1.linux2.6.x86_64.rpm"
 mysql_server_rpm="MySQL-server-5.5.20-1.linux2.6.x86_64.rpm"
 mysql_shared_rpm="MySQL-shared-5.5.20-1.linux2.6.x86_64.rpm"
 
+rpmforge_rpm_file="rpmforge-release-0.5.2-2.el5.rf.x86_64.rpm"
+rpm_forge_rpm_url="http://pkgs.repoforge.org/rpmforge-release/$rpmforge_rpm_file"
+
 zenoss_build="4.1.70-1448"
 zenoss_arch="x86_64"
 zenoss_rpm_file="zenoss-$zenoss_build.el5.$zenoss_arch.rpm"
@@ -84,3 +87,15 @@ rpm -ivh $zenoss_rpm_file
 
 echo "Installing Core ZenPacks"
 rpm -ivh $zenpack_rpm_file
+
+#If your working with alpha, odds are you are going to need some zenpacks from source.
+#lets install the git client
+echo "Installing GIT client from RPMFORGE"
+if [ `rpm -qa | grep -c -i git` -eq 0 ];then
+	if [ `rpm -qa | grep -c -i rpmforge` -eq 0 ];then
+		wget -N $rpm_forge_rpm_url
+		rpm -ivh $rpmforge_rpm_file
+	fi
+	yum -y install git
+fi
+
