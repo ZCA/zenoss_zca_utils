@@ -19,12 +19,19 @@ mysql_shared_rpm="MySQL-shared-5.5.20-1.linux2.6.x86_64.rpm"
 rpmforge_rpm_file="rpmforge-release-0.5.2-2.el5.rf.x86_64.rpm"
 rpm_forge_rpm_url="http://pkgs.repoforge.org/rpmforge-release/$rpmforge_rpm_file"
 
-zenoss_build="4.1.70-1449"
+latest_zenoss_build="4.1.70-1449"
 zenoss_arch="x86_64"
 zenoss_rpm_file="zenoss-$zenoss_build.el5.$zenoss_arch.rpm"
 zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.el5.$zenoss_arch.rpm"
 zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$zenoss_build"
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
+
+if [ "$1" == ""];then
+	#use the default unless instructed otherwise
+	zenoss_build=$latest_zenoss_build
+else
+	zenoss_build=$1	
+fi
 
 cd /tmp
 
