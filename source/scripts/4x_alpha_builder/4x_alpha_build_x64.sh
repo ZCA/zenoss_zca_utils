@@ -26,7 +26,7 @@ zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.el5.$zenoss_arch.rpm"
 zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$zenoss_build"
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 
-if [ "$1" == ""];then
+if [ "$1" == "" ];then
 	#use the default unless instructed otherwise
 	zenoss_build=$latest_zenoss_build
 else
