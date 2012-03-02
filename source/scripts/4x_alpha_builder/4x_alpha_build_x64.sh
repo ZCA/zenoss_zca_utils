@@ -19,7 +19,7 @@ mysql_shared_rpm="MySQL-shared-5.5.20-1.linux2.6.x86_64.rpm"
 rpmforge_rpm_file="rpmforge-release-0.5.2-2.el5.rf.x86_64.rpm"
 rpm_forge_rpm_url="http://pkgs.repoforge.org/rpmforge-release/$rpmforge_rpm_file"
 
-zenoss_build="4.1.70-1448"
+zenoss_build="4.1.70-1449"
 zenoss_arch="x86_64"
 zenoss_rpm_file="zenoss-$zenoss_build.el5.$zenoss_arch.rpm"
 zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.el5.$zenoss_arch.rpm"
