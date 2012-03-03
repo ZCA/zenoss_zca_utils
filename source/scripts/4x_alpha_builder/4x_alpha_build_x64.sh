@@ -9,17 +9,10 @@
 #
 ###################################################
 
-# Where to get stuff
-jre_file="jre-6u32-ea-bin-b02-linux-amd64-30_jan_2012-rpm.bin"
-jre_download="http://www.java.net/download/jdk6/6u32/promoted/b02/binaries/$jre_file"
-mysql_client_rpm="MySQL-client-5.5.20-1.linux2.6.x86_64.rpm"
-mysql_server_rpm="MySQL-server-5.5.20-1.linux2.6.x86_64.rpm"
-mysql_shared_rpm="MySQL-shared-5.5.20-1.linux2.6.x86_64.rpm"
-
-rpmforge_rpm_file="rpmforge-release-0.5.2-2.el5.rf.x86_64.rpm"
-rpm_forge_rpm_url="http://pkgs.repoforge.org/rpmforge-release/$rpmforge_rpm_file"
-
+# Defaults for user provided input
 latest_zenoss_build="4.1.70-1449"
+default_arch="x86_64"
+
 #Allow for overriding
 if [ "$1" = "" ];then
 	#use the default unless instructed otherwise
@@ -28,12 +21,46 @@ else
 	zenoss_build=$1	
 fi
 
-zenoss_arch="x86_64"
+#Define where to get stuff based on arch
+if [ "$2" = "" ];then
+	#Use the default arch, unless told otherwise
+	arch=$default_arch
+else
+	arch=$2
+fi
+
+
+# Where to get stuff. Base decisions on arch. Originally I was going to just
+# use the arch variable, but its a little dicey in that file names don't always
+# translate clearly. So just using if with a little duplication
+if [ "$arch" = "x86_64" ];then
+	jre_file="jre-6u32-ea-bin-b02-linux-amd64-30_jan_2012-rpm.bin"
+	mysql_client_rpm="MySQL-client-5.5.20-1.linux2.6.x86_64.rpm"
+	mysql_server_rpm="MySQL-server-5.5.20-1.linux2.6.x86_64.rpm"
+	mysql_shared_rpm="MySQL-shared-5.5.20-1.linux2.6.x86_64.rpm"
+	rpmforge_rpm_file="rpmforge-release-0.5.2-2.el5.rf.x86_64.rpm"
+	
+elif [ "$arch" = "i386" ]; then
+	#yeah...yeah.. jdk is not jre, but no jre listed for i386
+	jre_file="jdk-6u32-ea-bin-b02-linux-i586-30_jan_2012-rpm.bin"
+	mysql_client_rpm="MySQL-client-5.5.21-1.linux2.6.i386.rpm"
+	mysql_server_rpm="MySQL-server-5.5.21-1.linux2.6.i386.rpm"
+	mysql_shared_rpm="MySQL-shared-5.5.21-1.linux2.6.i386.rpm"
+	rpmforge_rpm_file="rpmforge-release-0.5.2-2.el5.rf.i386.rpm"
+else
+	echo "Don't know where to get files for arch $arch"
+	exit 1
+fi
+
+jre_download="http://www.java.net/download/jdk6/6u32/promoted/b02/binaries/$jre_file"
+
+zenoss_arch=$arch
 zenoss_rpm_file="zenoss-$zenoss_build.el5.$zenoss_arch.rpm"
 zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.el5.$zenoss_arch.rpm"
 zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$zenoss_build"
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 
+rpm_forge_rpm_url="http://pkgs.repoforge.org/rpmforge-release/$rpmforge_rpm_file"
 
 
 cd /tmp
@@ -66,7 +93,7 @@ do
 	if [ ! -f $file ];then
 		wget http://dev.mysql.com/get/Downloads/MySQL-5.5/$file/from/http://mirror.services.wisc.edu/mysql/
 	fi
-	rpm_entry=`echo $file | sed s/.x86_64.rpm//g`
+	rpm_entry=`echo $file | sed s/.x86_64.rpm//g | sed s/.i386.rpm//g | sed s/.i586.rpm//g`
 	if [ `rpm -qa | grep -c $rpm_entry` -eq 0 ];then
 		rpm -ivh $file
 	fi
