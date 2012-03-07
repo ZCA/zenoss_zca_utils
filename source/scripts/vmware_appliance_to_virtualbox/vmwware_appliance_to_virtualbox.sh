@@ -9,7 +9,7 @@
 
 # Some Default Variables
 # @todo - Enhance this to take command line arguments for more flexibility
-buildNumber="4.1.70-1438"
+buildNumber="4.1.70-1453"
 arch="x86_64"
 baseFileName="zenoss-$buildNumber-$arch"
 zipFileName="$baseFileName.vmware.zip"
