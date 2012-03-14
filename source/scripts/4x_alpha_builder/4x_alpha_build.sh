@@ -10,7 +10,7 @@
 ###################################################
 
 # Defaults for user provided input
-latest_zenoss_build="4.1.70-1455"
+latest_zenoss_build="4.1.70-1459"
 default_arch="x86_64"
 
 #Define where to get stuff based on arch
