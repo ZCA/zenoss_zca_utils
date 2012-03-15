@@ -10,7 +10,9 @@
 ###################################################
 
 # Defaults for user provided input
-latest_zenoss_build="4.1.70-1459"
+major="4.1.70"
+build="1459"
+latest_zenoss_build="$major-$build"
 default_arch="x86_64"
 
 #Define where to get stuff based on arch
@@ -58,7 +60,7 @@ jre_download="http://download.oracle.com/otn-pub/java/jdk/6u31-b04/$jre_file"
 zenoss_arch=$arch
 zenoss_rpm_file="zenoss-$zenoss_build.el5.$zenoss_arch.rpm"
 zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.el5.$zenoss_arch.rpm"
-zp_msmonitor_rpm="zenoss_msmonitor-$zenoss_build.el5.$zenoss_arch.rpm"
+zp_msmonitor_rpm="zenoss_msmonitor-$major-1.$build.el5.$zenoss_arch.rpm"
 zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$zenoss_build"
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 
