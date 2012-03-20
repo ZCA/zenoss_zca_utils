@@ -60,7 +60,6 @@ jre_download="http://download.oracle.com/otn-pub/java/jdk/6u31-b04/$jre_file"
 zenoss_arch=$arch
 zenoss_rpm_file="zenoss-$zenoss_build.el5.$zenoss_arch.rpm"
 zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.el5.$zenoss_arch.rpm"
-zp_msmonitor_rpm="zenoss_msmonitor-$major-1.$build.el5.$zenoss_arch.rpm"
 zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$zenoss_build"
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 
@@ -80,7 +79,7 @@ if [ `rpm -qa | grep -c jre` -eq 0 ];then
 	./$jre_file
 fi
 echo "Downloading Zenoss RPMs"
-for file in $zenoss_rpm_file $zenpack_rpm_file $zp_msmonitor_rpm;do
+for file in $zenoss_rpm_file $zenpack_rpm_file;do
 	if [ ! -f $file ];then
 		wget $zenoss_base_url/$file
 	fi
@@ -129,8 +128,6 @@ rpm -ivh $zenoss_rpm_file
 echo "Installing Core ZenPacks"
 rpm -ivh $zenpack_rpm_file
 
-echo "Installing msmonitor ZenPacks"
-rpm -ivh $zp_msmonitor_rpm
 
 #If your working with alpha, odds are you are going to need some zenpacks from source.
 #lets install the git client
