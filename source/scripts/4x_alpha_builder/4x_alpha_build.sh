@@ -39,9 +39,9 @@ fi
 # translate clearly. So just using if with a little duplication
 if [ "$arch" = "x86_64" ];then
 	jre_file="jre-6u31-linux-x64-rpm.bin"
-	mysql_client_rpm="MySQL-client-5.5.20-1.linux2.6.x86_64.rpm"
-	mysql_server_rpm="MySQL-server-5.5.20-1.linux2.6.x86_64.rpm"
-	mysql_shared_rpm="MySQL-shared-5.5.20-1.linux2.6.x86_64.rpm"
+	mysql_client_rpm="MySQL-client-5.5.21-1.linux2.6.x86_64.rpm"
+	mysql_server_rpm="MySQL-server-5.5.21-1.linux2.6.x86_64.rpm"
+	mysql_shared_rpm="MySQL-shared-5.5.21-1.linux2.6.x86_64.rpm"
 	rpmforge_rpm_file="rpmforge-release-0.5.2-2.el5.rf.x86_64.rpm"
 	
 elif [ "$arch" = "i386" ]; then
