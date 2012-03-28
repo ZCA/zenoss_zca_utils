@@ -87,7 +87,7 @@ echo "Downloading Files"
 if [ `rpm -qa | grep -c -i jre` -eq 0 ]; then
 	if [ ! -f $jre_file ];then
 		echo "Downloading Oracle JRE"
-		wget -O $jre_file $jre_download
+		wget -O $jre_file $jre_url
 		chmod +x $jre_file
 	fi
 	if [ `rpm -qa | grep -c jre` -eq 0 ]; then
