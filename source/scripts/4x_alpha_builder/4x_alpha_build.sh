@@ -32,6 +32,8 @@ else
 	zenoss_build=$2
 fi
 
+
+
 echo "Ensuring This server is in a clean state before we start"
 mysql_installed=0
 if [ `rpm -qa | grep -c -i mysql` -gt 0 ]; then
@@ -58,6 +60,7 @@ fi
 # translate clearly. So just using if with a little duplication
 if [ "$arch" = "x86_64" ]; then
 	jre_file="jre-6u31-linux-x64-rpm.bin"
+	jre_url="http://javadl.sun.com/webapps/download/AutoDL?BundleId=59622"
 	mysql_client_rpm="MySQL-client-5.5.21-1.linux2.6.x86_64.rpm"
 	mysql_server_rpm="MySQL-server-5.5.21-1.linux2.6.x86_64.rpm"
 	mysql_shared_rpm="MySQL-shared-5.5.21-1.linux2.6.x86_64.rpm"
@@ -65,6 +68,7 @@ if [ "$arch" = "x86_64" ]; then
 	
 elif [ "$arch" = "i386" ]; then
 	jre_file="jre-6u31-linux-i586-rpm.bin"
+	jre_url="http://javadl.sun.com/webapps/download/AutoDL?BundleId=59620"
 	mysql_client_rpm="MySQL-client-5.5.21-1.linux2.6.i386.rpm"
 	mysql_server_rpm="MySQL-server-5.5.21-1.linux2.6.i386.rpm"
 	mysql_shared_rpm="MySQL-shared-5.5.21-1.linux2.6.i386.rpm"
@@ -82,9 +86,8 @@ cd /tmp
 echo "Downloading Files"
 if [ `rpm -qa | grep -c -i jre` -eq 0 ]; then
 	if [ ! -f $jre_file ];then
-		jre_download="http://download.oracle.com/otn-pub/java/jdk/6u31-b04/$jre_file"
 		echo "Downloading Oracle JRE"
-		wget $jre_download
+		wget -N -O $jre_file $jre_download
 		chmod +x $jre_file
 	fi
 	if [ `rpm -qa | grep -c jre` -eq 0 ]; then
