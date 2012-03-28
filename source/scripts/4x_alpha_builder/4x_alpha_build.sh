@@ -12,7 +12,7 @@
 
 # Defaults for user provided input
 major="4.1.70"
-build="1466"
+build="1468"
 latest_zenoss_build="$major-$build"
 default_arch="x86_64"
 
