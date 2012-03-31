@@ -12,7 +12,7 @@
 
 # Defaults for user provided input
 major="4.1.70"
-build="1468"
+build="1469"
 latest_zenoss_build="$major-$build"
 default_arch="x86_64"
 
@@ -53,6 +53,16 @@ if [ `rpm -qa | grep -c -i zenoss` -gt 0 ]; then
 	exit 1
 fi
 
+#Now that RHEL6 RPMs are released, lets try to be smart and pick RPMs based on that
+if [ -f /etc/redhat-release ]; then
+	elv=`cat /etc/redhat-release | gawk 'BEGIN {FS="release "} {print $2}' | gawk 'BEGIN {FS="."} {print $1}'`
+	#EnterpriseLinux Version String. Just a shortcut to be used later
+	els=el$elv
+else
+	#Bail
+	echo "Unable to determine version. I can't continue
+	exit 1
+fi
 
 
 # Where to get stuff. Base decisions on arch. Originally I was going to just
@@ -64,7 +74,7 @@ if [ "$arch" = "x86_64" ]; then
 	mysql_client_rpm="MySQL-client-5.5.21-1.linux2.6.x86_64.rpm"
 	mysql_server_rpm="MySQL-server-5.5.21-1.linux2.6.x86_64.rpm"
 	mysql_shared_rpm="MySQL-shared-5.5.21-1.linux2.6.x86_64.rpm"
-	rpmforge_rpm_file="rpmforge-release-0.5.2-2.el5.rf.x86_64.rpm"
+	rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.x86_64.rpm"
 	
 elif [ "$arch" = "i386" ]; then
 	jre_file="jre-6u31-linux-i586-rpm.bin"
@@ -72,7 +82,7 @@ elif [ "$arch" = "i386" ]; then
 	mysql_client_rpm="MySQL-client-5.5.21-1.linux2.6.i386.rpm"
 	mysql_server_rpm="MySQL-server-5.5.21-1.linux2.6.i386.rpm"
 	mysql_shared_rpm="MySQL-shared-5.5.21-1.linux2.6.i386.rpm"
-	rpmforge_rpm_file="rpmforge-release-0.5.2-2.el5.rf.i386.rpm"
+	rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.i386.rpm"
 else
 	echo "Don't know where to get files for arch $arch"
 	exit 1
@@ -100,8 +110,8 @@ fi
 
 echo "Downloading Zenoss RPMs"
 zenoss_arch=$arch
-zenoss_rpm_file="zenoss-$zenoss_build.el5.$zenoss_arch.rpm"
-zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.el5.$zenoss_arch.rpm"
+zenoss_rpm_file="zenoss-$zenoss_build.$els.$zenoss_arch.rpm"
+zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.$els.$zenoss_arch.rpm"
 zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$zenoss_build"
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 for file in $zenoss_rpm_file $zenpack_rpm_file;do
@@ -131,7 +141,7 @@ if [ $mysql_installed -eq 0 ]; then
 fi
 
 echo "Installing Zenoss Dependency Repo"
-rpm -ivh http://deps.zenoss.com/yum/zenossdeps.el5.noarch.rpm
+rpm -ivh http://deps.zenoss.com/yum/zenossdeps.$els.noarch.rpm
 
 echo "Installing Required Packages"
 yum -y install tk unixODBC erlang rabbitmq-server memcached perl-DBI net-snmp \
