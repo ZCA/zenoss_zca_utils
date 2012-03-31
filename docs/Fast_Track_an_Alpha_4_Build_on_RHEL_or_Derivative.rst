@@ -23,7 +23,7 @@ Requirements/Recommendations
 The following requirements must be met:
 * You must be running on a RHEL derivative.
 * Ensure you meet all other requirements as outlined in the official
-  installation guide
+  installation guide.
 * The machine you are running this on will need access to various internet
   sites.
 * You should start with a minimal install to avoid any dependency issues
