@@ -29,5 +29,4 @@ Run It
 ======
 Just run the following to get the ball rolling::
    
-   yum -y install wget
    wget -N http://bit.ly/GYOYjO && sh 4x_alpha_build_$HOSTTYPE.sh
