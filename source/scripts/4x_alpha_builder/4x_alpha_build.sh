@@ -147,7 +147,7 @@ if [ $mysql_installed -eq 0 ]; then
 	done
 fi
 
-echo "Installing Zenoss Dependency Repo"
+#echo "Installing Zenoss Dependency Repo"
 #There is no EL6 rpm for this as of now. I'm not even entirelly sure we really need it if we have epel
 #rpm -ivh http://deps.zenoss.com/yum/zenossdeps.el5.noarch.rpm
 
