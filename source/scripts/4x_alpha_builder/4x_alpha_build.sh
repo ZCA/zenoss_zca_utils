@@ -60,7 +60,7 @@ if [ -f /etc/redhat-release ]; then
 	els=el$elv
 else
 	#Bail
-	echo "Unable to determine version. I can't continue
+	echo "Unable to determine version. I can't continue"
 	exit 1
 fi
 
