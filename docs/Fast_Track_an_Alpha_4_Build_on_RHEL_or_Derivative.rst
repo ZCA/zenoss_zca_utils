@@ -29,5 +29,5 @@ Run It
 ======
 Just run the following to get the ball rolling::
    
-   wget -N https://raw.github.com/ZCA/zenoss_zca_utils/master/source/scripts/4x_alpha_builder/4x_alpha_build_$HOSTTYPE.sh
-   sh 4x_alpha_build_$HOSTTYPE.sh
+   yum -y install wget
+   wget -N http://bit.ly/GYOYjO && sh 4x_alpha_build_$HOSTTYPE.sh
