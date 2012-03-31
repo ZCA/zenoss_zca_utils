@@ -74,7 +74,9 @@ if [ "$arch" = "x86_64" ]; then
 	mysql_client_rpm="MySQL-client-5.5.21-1.linux2.6.x86_64.rpm"
 	mysql_server_rpm="MySQL-server-5.5.21-1.linux2.6.x86_64.rpm"
 	mysql_shared_rpm="MySQL-shared-5.5.21-1.linux2.6.x86_64.rpm"
-	rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.x86_64.rpm"
+	#rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.x86_64.rpm"
+	epel_rpm_file=epel-release-6-5.noarch.rpm
+	epel_rpm_url=http://download.fedoraproject.org/pub/epel/6/i386/$epel_rpm_file
 	
 elif [ "$arch" = "i386" ]; then
 	jre_file="jre-6u31-linux-i586-rpm.bin"
@@ -82,14 +84,19 @@ elif [ "$arch" = "i386" ]; then
 	mysql_client_rpm="MySQL-client-5.5.21-1.linux2.6.i386.rpm"
 	mysql_server_rpm="MySQL-server-5.5.21-1.linux2.6.i386.rpm"
 	mysql_shared_rpm="MySQL-shared-5.5.21-1.linux2.6.i386.rpm"
-	rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.i386.rpm"
+	#rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.i386.rpm"
+	epel_rpm_file=epel-release-5-4.noarch.rpm
+	epel_rpm_url=http://dl.fedoraproject.org/pub/epel/5/i386/$epel_rpm_file
 else
 	echo "Don't know where to get files for arch $arch"
 	exit 1
 fi
 
-rpm_forge_rpm_url="http://pkgs.repoforge.org/rpmforge-release/$rpmforge_rpm_file"
-
+echo "Enabling EPEL Repo"
+if [ `rpm -qa | grep -c -i epel` -eq 0 ];then
+	wget -N $epel_rpm_url
+	rpm -ivh $epel_rpm_file
+fi
 
 cd /tmp
 
@@ -145,7 +152,14 @@ rpm -ivh http://deps.zenoss.com/yum/zenossdeps.$els.noarch.rpm
 
 echo "Installing Required Packages"
 yum -y install tk unixODBC erlang rabbitmq-server memcached perl-DBI net-snmp \
-net-snmp-utils gmp libgomp libgcj.$arch libxslt liberation-fonts
+net-snmp-utils gmp libgomp libgcj.$arch libxslt 
+
+#Some Package names are depend on el release
+if [ "$elv" == "5" ]; then
+	yum -y install liberation-fonts
+elif [ "$elv" == "6" ]; then
+	yum -y install liberation-fonts-common
+fi
 
 echo "Configuring and Starting some Base Services"
 for service in rabbitmq-server memcached snmpd mysql; do
@@ -168,14 +182,5 @@ rpm -ivh $zenpack_rpm_file
 
 
 echo "Please remember you can use the new zenpack --fetch command to install most zenpacks into your new core 4 Alpha install"
-#If your working with alpha, odds are you are going to need some zenpacks from source.
-#lets install the git client
-#echo "Installing GIT client from RPMFORGE"
-#if [ `rpm -qa | grep -c -i git` -eq 0 ];then
-#	if [ `rpm -qa | grep -c -i rpmforge` -eq 0 ];then
-#		wget -N $rpm_forge_rpm_url
-#		rpm -ivh $rpmforge_rpm_file
-#	fi
-#	yum -y install git
-#fi
+
 
