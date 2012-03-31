@@ -12,7 +12,7 @@
 
 # Defaults for user provided input
 major="4.1.70"
-build="1469"
+build="1471"
 latest_zenoss_build="$major-$build"
 default_arch="x86_64"
 
@@ -148,7 +148,8 @@ if [ $mysql_installed -eq 0 ]; then
 fi
 
 echo "Installing Zenoss Dependency Repo"
-rpm -ivh http://deps.zenoss.com/yum/zenossdeps.$els.noarch.rpm
+#There is no EL6 rpm for this as of now. I'm not even entirelly sure we really need it if we have epel, but keeping for now
+rpm -ivh http://deps.zenoss.com/yum/zenossdeps.el5.noarch.rpm
 
 echo "Installing Required Packages"
 yum -y install tk unixODBC erlang rabbitmq-server memcached perl-DBI net-snmp \
@@ -158,7 +159,7 @@ net-snmp-utils gmp libgomp libgcj.$arch libxslt
 if [ "$elv" == "5" ]; then
 	yum -y install liberation-fonts
 elif [ "$elv" == "6" ]; then
-	yum -y install liberation-fonts-common
+	yum -y install liberation-fonts-common pkgconfig liberation-mono-fonts liberation-sans-fonts liberation-serif-fonts
 fi
 
 echo "Configuring and Starting some Base Services"
