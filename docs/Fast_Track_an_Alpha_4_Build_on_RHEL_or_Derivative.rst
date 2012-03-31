@@ -18,12 +18,17 @@ The script is completly dependant on the fact that you are running it on
 a clean/fresh RHEL derivative. Its not going to work on another distro
 like Ubuntu.
 
-Requirements
-============
+Requirements/Recommendations
+============================
 The following requirements must be met:
 * You must be running on a RHEL derivative.
+* Ensure you meet all other requirements as outlined in the official
+  installation guide
 * The machine you are running this on will need access to various internet
   sites.
+* You should start with a minimal install to avoid any dependency issues
+* You might want to disable iptables, or at least open up 8080 so you
+  access the web ui after instalation is complete
 
 Run It
 ======
