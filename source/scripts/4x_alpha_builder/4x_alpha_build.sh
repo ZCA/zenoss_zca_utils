@@ -148,8 +148,8 @@ if [ $mysql_installed -eq 0 ]; then
 fi
 
 echo "Installing Zenoss Dependency Repo"
-#There is no EL6 rpm for this as of now. I'm not even entirelly sure we really need it if we have epel, but keeping for now
-rpm -ivh http://deps.zenoss.com/yum/zenossdeps.el5.noarch.rpm
+#There is no EL6 rpm for this as of now. I'm not even entirelly sure we really need it if we have epel
+#rpm -ivh http://deps.zenoss.com/yum/zenossdeps.el5.noarch.rpm
 
 echo "Installing Required Packages"
 yum -y install tk unixODBC erlang rabbitmq-server memcached perl-DBI net-snmp \
