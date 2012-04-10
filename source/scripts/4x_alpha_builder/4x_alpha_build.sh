@@ -4,7 +4,7 @@
 # A silly little script to make installing a 
 # Zenoss Core 4.x alpha development/testing machine
 # to save me a little time next time a new release is cut
-# VERY Centos 5 centric/dependant.
+# VERY Centos/RHEL centric/dependant.
 # Its assumed you are running this on a bare/clean machine
 #
 #
