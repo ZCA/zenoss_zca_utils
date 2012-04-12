@@ -36,9 +36,9 @@ fi
 
 echo "Ensuring This server is in a clean state before we start"
 mysql_installed=0
-if [ `rpm -qa | grep -c -i mysql` -gt 0 ]; then
-	if [ `rpm -qa | grep -i mysql | grep -c -v 5.5` -gt 0 ]; then
-		echo "It appears you already have an older version of MySQL Install"
+if [ `rpm -qa | grep -c -i mysql-server` -gt 0 ]; then
+	if [ `rpm -qa | grep -i mysql-server | grep -c -v 5.5` -gt 0 ]; then
+		echo "It appears you already have an older version of MySQL server installed"
 		echo "I'm to scared to continue. Please remove existing MySQL Packages"
 		exit 1
 	else
