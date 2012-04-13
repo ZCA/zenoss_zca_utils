@@ -97,7 +97,7 @@ fi
 
 echo "Enabling EPEL Repo"
 if [ `rpm -qa | grep -c -i epel` -eq 0 ];then
-	wget -N $epel_rpm_url
+	wget -a $log_file -N $epel_rpm_url
 	rpm -ivh $epel_rpm_file
 fi
 
@@ -107,7 +107,7 @@ echo "Downloading Files"
 if [ `rpm -qa | grep -c -i jre` -eq 0 ]; then
 	if [ ! -f $jre_file ];then
 		echo "Downloading Oracle JRE"
-		wget -O $jre_file $jre_url
+		wget -a $log_file -O $jre_file $jre_url
 		chmod +x $jre_file
 	fi
 	if [ `rpm -qa | grep -c jre` -eq 0 ]; then
@@ -141,7 +141,7 @@ if [ $mysql_installed -eq 0 ]; then
 	for file in $mysql_client_rpm $mysql_server_rpm $mysql_shared_rpm;
 	do
 		if [ ! -f $file ];then
-			wget http://dev.mysql.com/get/Downloads/MySQL-5.5/$file/from/http://mirror.services.wisc.edu/mysql/
+			wget -a $log_file http://dev.mysql.com/get/Downloads/MySQL-5.5/$file/from/http://mirror.services.wisc.edu/mysql/
 		fi
 		rpm_entry=`echo $file | sed s/.x86_64.rpm//g | sed s/.i386.rpm//g | sed s/.i586.rpm//g`
 		if [ `rpm -qa | grep -c $rpm_entry` -eq 0 ];then
