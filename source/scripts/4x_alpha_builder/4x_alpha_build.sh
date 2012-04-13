@@ -97,7 +97,7 @@ fi
 
 echo "Enabling EPEL Repo"
 if [ `rpm -qa | grep -c -i epel` -eq 0 ];then
-	wget -a $log_file -N $epel_rpm_url
+	wget -nv -a $log_file -N $epel_rpm_url
 	rpm -ivh $epel_rpm_file
 fi
 
@@ -107,7 +107,7 @@ echo "Downloading Files"
 if [ `rpm -qa | grep -c -i jre` -eq 0 ]; then
 	if [ ! -f $jre_file ];then
 		echo "Downloading Oracle JRE"
-		wget -a $log_file -O $jre_file $jre_url
+		wget -nv -a $log_file -O $jre_file $jre_url
 		chmod +x $jre_file
 	fi
 	if [ `rpm -qa | grep -c jre` -eq 0 ]; then
@@ -126,7 +126,7 @@ zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$z
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 for file in $zenoss_rpm_file $zenpack_rpm_file;do
 	if [ ! -f $file ];then
-		wget -a $log_file $zenoss_base_url/$file
+		wget -nv -a $log_file $zenoss_base_url/$file
 	fi
 done
 
