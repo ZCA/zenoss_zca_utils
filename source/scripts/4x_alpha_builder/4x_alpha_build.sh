@@ -130,6 +130,7 @@ if [ $mysql_installed -eq 0 ]; then
 		fi
 		if [ ! -f $file ];then
 			echo "Failed to download $file. I can't continue" | tee -a $log_file
+			exit 1
 		fi
 		rpm_entry=`echo $file | sed s/.x86_64.rpm//g | sed s/.i386.rpm//g | sed s/.i586.rpm//g`
 		if [ `rpm -qa | grep -c $rpm_entry` -eq 0 ];then
