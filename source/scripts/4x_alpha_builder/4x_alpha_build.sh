@@ -16,6 +16,8 @@ build="1482"
 latest_zenoss_build="$major-$build"
 default_arch="x86_64"
 
+mysql_v="5.5.22"
+
 log_file="4x_alpha_build.log"
 
 echo "Attempting to Install Zenoss $latest_zenoss_build and components" | tee $log_file
@@ -76,9 +78,9 @@ fi
 if [ "$arch" = "x86_64" ]; then
 	jre_file="jre-6u31-linux-x64-rpm.bin"
 	jre_url="http://javadl.sun.com/webapps/download/AutoDL?BundleId=59622"
-	mysql_client_rpm="MySQL-client-5.5.21-1.linux2.6.x86_64.rpm"
-	mysql_server_rpm="MySQL-server-5.5.21-1.linux2.6.x86_64.rpm"
-	mysql_shared_rpm="MySQL-shared-5.5.21-1.linux2.6.x86_64.rpm"
+	mysql_client_rpm="MySQL-client-$mysql_v-1.linux2.6.x86_64.rpm"
+	mysql_server_rpm="MySQL-server-$mysql_v-1.linux2.6.x86_64.rpm"
+	mysql_shared_rpm="MySQL-shared-$mysql_v-1.linux2.6.x86_64.rpm"
 	#rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.x86_64.rpm"
 	epel_rpm_file=epel-release-6-5.noarch.rpm
 	epel_rpm_url=http://download.fedoraproject.org/pub/epel/6/i386/$epel_rpm_file
@@ -86,9 +88,9 @@ if [ "$arch" = "x86_64" ]; then
 elif [ "$arch" = "i386" ]; then
 	jre_file="jre-6u31-linux-i586-rpm.bin"
 	jre_url="http://javadl.sun.com/webapps/download/AutoDL?BundleId=59620"
-	mysql_client_rpm="MySQL-client-5.5.21-1.linux2.6.i386.rpm"
-	mysql_server_rpm="MySQL-server-5.5.21-1.linux2.6.i386.rpm"
-	mysql_shared_rpm="MySQL-shared-5.5.21-1.linux2.6.i386.rpm"
+	mysql_client_rpm="MySQL-client-$mysql_v-1.linux2.6.i386.rpm"
+	mysql_server_rpm="MySQL-server-$mysql_v-1.linux2.6.i386.rpm"
+	mysql_shared_rpm="MySQL-shared-$mysql_v-1.linux2.6.i386.rpm"
 	#rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.i386.rpm"
 	epel_rpm_file=epel-release-5-4.noarch.rpm
 	epel_rpm_url=http://dl.fedoraproject.org/pub/epel/5/i386/$epel_rpm_file
