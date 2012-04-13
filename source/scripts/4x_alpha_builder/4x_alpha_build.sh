@@ -138,12 +138,16 @@ if [ `rpm -qa gpg-pubkey* | grep -c "aa5a1ad7-4829c08a"` -eq 0  ];then
 	rpm --import $zenoss_gpg_key | tee -a $log_file
 fi
 
+echo "Downloading MySQL RPMs" | tee -a $log_file
 if [ $mysql_installed -eq 0 ]; then
 	#Only install if MySQL Is not already installed
 	for file in $mysql_client_rpm $mysql_server_rpm $mysql_shared_rpm;
 	do
 		if [ ! -f $file ];then
 			wget -nv http://dev.mysql.com/get/Downloads/MySQL-5.5/$file/from/http://mirror.services.wisc.edu/mysql/ | tee -a $log_file
+		fi
+		if [ ! -f $file ]:then
+			echo "Failed to download $file. I can't continue" | tee -a $log_file
 		fi
 		rpm_entry=`echo $file | sed s/.x86_64.rpm//g | sed s/.i386.rpm//g | sed s/.i586.rpm//g`
 		if [ `rpm -qa | grep -c $rpm_entry` -eq 0 ];then
