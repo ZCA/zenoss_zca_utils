@@ -18,6 +18,8 @@ default_arch="x86_64"
 
 log_file="4x_alpha_build.log"
 
+echo "Attempting to Install Zenoss $latest_zenoss_build and components" | tee $log_file
+
 #Define where to get stuff based on arch
 if [ "$1" = "" ];then
 	#Use the default arch, unless told otherwise
@@ -36,7 +38,7 @@ fi
 
 
 
-echo "Ensuring This server is in a clean state before we start"
+echo "Ensuring This server is in a clean state before we start" | tee -a $log_file
 mysql_installed=0
 if [ `rpm -qa | egrep -c -i "^mysql-(libs|server)?"` -gt 0 ]; then
 	if [ `rpm -qa | egrep -i "^mysql-(libs|server)?" | grep -c -v 5.5` -gt 0 ]; then
