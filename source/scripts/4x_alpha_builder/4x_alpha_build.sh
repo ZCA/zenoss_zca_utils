@@ -16,6 +16,8 @@ build="1482"
 latest_zenoss_build="$major-$build"
 default_arch="x86_64"
 
+log_file="./$0.log"
+
 #Define where to get stuff based on arch
 if [ "$1" = "" ];then
 	#Use the default arch, unless told otherwise
@@ -124,7 +126,7 @@ zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$z
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 for file in $zenoss_rpm_file $zenpack_rpm_file;do
 	if [ ! -f $file ];then
-		wget $zenoss_base_url/$file
+		wget $zenoss_base_url/$file >> $log_file
 	fi
 done
 
