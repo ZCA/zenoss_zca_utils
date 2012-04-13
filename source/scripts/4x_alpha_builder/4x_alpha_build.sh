@@ -126,7 +126,7 @@ zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$z
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 for file in $zenoss_rpm_file $zenpack_rpm_file;do
 	if [ ! -f $file ];then
-		wget $zenoss_base_url/$file >> $log_file 2>&1
+		wget -a $log_file $zenoss_base_url/$file
 	fi
 done
 
