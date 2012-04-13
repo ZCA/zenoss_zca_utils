@@ -20,7 +20,7 @@ mysql_v="5.5.22"
 
 log_file="4x_alpha_build.log"
 
-echo "Attempting to Install Zenoss $latest_zenoss_build and components" | tee $log_file
+echo "Attempting to Install Zenoss $latest_zenoss_build and components" 2>&1 | tee $log_file
 
 #Define where to get stuff based on arch
 if [ "$1" = "" ];then
@@ -40,23 +40,23 @@ fi
 
 
 
-echo "Ensuring This server is in a clean state before we start" | tee -a $log_file
+echo "Ensuring This server is in a clean state before we start" 2>&1 | tee -a $log_file
 mysql_installed=0
 if [ `rpm -qa | egrep -c -i "^mysql-(libs|server)?"` -gt 0 ]; then
 	if [ `rpm -qa | egrep -i "^mysql-(libs|server)?" | grep -c -v 5.5` -gt 0 ]; then
-		echo "It appears you already have an older version of MySQL server installed" | tee -a $log_file
-		echo "I'm to scared to continue. Please remove the following existing MySQL Packages:" | tee -a $log_file
-		rpm -qa | egrep -i "^mysql-(libs|server)?" | tee -a $log_file
+		echo "It appears you already have an older version of MySQL server installed" 2>&1 | tee -a $log_file
+		echo "I'm to scared to continue. Please remove the following existing MySQL Packages:" 2>&1 | tee -a $log_file
+		rpm -qa | egrep -i "^mysql-(libs|server)?" 2>&1 | tee -a $log_file
 		exit 1
 	else
-		echo "It appears MySQL 5.5 is already installed. MySQL Installation  will be skipped" | tee -a $log_file
+		echo "It appears MySQL 5.5 is already installed. MySQL Installation  will be skipped" 2>&1 | tee -a $log_file
 		mysql_installed=1
 	fi
 fi
 
 echo "Ensuring Zenoss RPMs are not already present"
 if [ `rpm -qa | grep -c -i zenoss` -gt 0 ]; then
-	echo "I see Zenoss Packages already installed. I can't handle that" | tee -a $log_file
+	echo "I see Zenoss Packages already installed. I can't handle that" 2>&1 | tee -a $log_file
 	exit 1
 fi
 
@@ -67,7 +67,7 @@ if [ -f /etc/redhat-release ]; then
 	els=el$elv
 else
 	#Bail
-	echo "Unable to determine version. I can't continue" | tee -a $log_file
+	echo "Unable to determine version. I can't continue" 2>&1 | tee -a $log_file
 	exit 1
 fi
 
@@ -95,48 +95,48 @@ elif [ "$arch" = "i386" ]; then
 	epel_rpm_file=epel-release-5-4.noarch.rpm
 	epel_rpm_url=http://dl.fedoraproject.org/pub/epel/5/i386/$epel_rpm_file
 else
-	echo "Don't know where to get files for arch $arch" | tee -a $log_file
+	echo "Don't know where to get files for arch $arch" 2>&1 | tee -a $log_file
 	exit 1
 fi
 
-echo "Enabling EPEL Repo" | tee -a $log_file
+echo "Enabling EPEL Repo" 2>&1 | tee -a $log_file
 if [ `rpm -qa | grep -c -i epel` -eq 0 ];then
-	wget -nv -N $epel_rpm_url | tee -a $log_file
-	rpm -ivh $epel_rpm_file | tee -a $log_file
+	wget -N $epel_rpm_url 2>&1 | tee -a $log_file
+	rpm -ivh $epel_rpm_file 2>&1 | tee -a $log_file
 fi
 
 cd /tmp
 
-echo "Downloading Files" | tee -a $log_file
+echo "Downloading Files" 2>&1 | tee -a $log_file
 if [ `rpm -qa | grep -c -i jre` -eq 0 ]; then
 	if [ ! -f $jre_file ];then
-		echo "Downloading Oracle JRE" | tee -a $log_file
-		wget -O $jre_file $jre_url | tee -a $log_file
+		echo "Downloading Oracle JRE" 2>&1 | tee -a $log_file
+		wget -N -O $jre_file $jre_url 2>&1 | tee -a $log_file
 		chmod +x $jre_file
 	fi
 	if [ `rpm -qa | grep -c jre` -eq 0 ]; then
-		echo "Installating JRE" | tee -a $log_file
+		echo "Installating JRE" 2>&1 | tee -a $log_file
 		./$jre_file
 	fi
 else
-	echo "Appears you already have a JRE installed. I'm not going to install another one" | tee -a $log_file
+	echo "Appears you already have a JRE installed. I'm not going to install another one" 2>&1 | tee -a $log_file
 fi
 
-echo "Downloading and installing MySQL RPMs" | tee -a $log_file
+echo "Downloading and installing MySQL RPMs" 2>&1 | tee -a $log_file
 if [ $mysql_installed -eq 0 ]; then
 	#Only install if MySQL Is not already installed
 	for file in $mysql_client_rpm $mysql_server_rpm $mysql_shared_rpm;
 	do
 		if [ ! -f $file ];then
-			wget -nv http://dev.mysql.com/get/Downloads/MySQL-5.5/$file/from/http://mirror.services.wisc.edu/mysql/ | tee -a $log_file
+			wget -N http://dev.mysql.com/get/Downloads/MySQL-5.5/$file/from/http://mirror.services.wisc.edu/mysql/ 2>&1 | tee -a $log_file
 		fi
 		if [ ! -f $file ];then
-			echo "Failed to download $file. I can't continue" | tee -a $log_file
+			echo "Failed to download $file. I can't continue" 2>&1 | tee -a $log_file
 			exit 1
 		fi
 		rpm_entry=`echo $file | sed s/.x86_64.rpm//g | sed s/.i386.rpm//g | sed s/.i586.rpm//g`
 		if [ `rpm -qa | grep -c $rpm_entry` -eq 0 ];then
-			rpm -ivh $file | tee -a $log_file
+			rpm -ivh $file 2>&1 | tee -a $log_file
 		fi
 	done
 fi
@@ -149,14 +149,14 @@ zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$z
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 for file in $zenoss_rpm_file $zenpack_rpm_file;do
 	if [ ! -f $file ];then
-		wget -nv $zenoss_base_url/$file | tee -a $log_file
+		wget -N $zenoss_base_url/$file 2>&1 | tee -a $log_file
 	fi
 done
 
 
 if [ `rpm -qa gpg-pubkey* | grep -c "aa5a1ad7-4829c08a"` -eq 0  ];then
-	echo "Importing Zenoss GPG Key" | tee -a $log_file
-	rpm --import $zenoss_gpg_key | tee -a $log_file
+	echo "Importing Zenoss GPG Key" 2>&1 | tee -a $log_file
+	rpm --import $zenoss_gpg_key 2>&1 | tee -a $log_file
 fi
 
 
@@ -166,35 +166,35 @@ fi
 
 echo "Installing Required Packages"
 yum -y install tk unixODBC erlang rabbitmq-server memcached perl-DBI net-snmp \
-net-snmp-utils gmp libgomp libgcj.$arch libxslt | tee -a $log_file
+net-snmp-utils gmp libgomp libgcj.$arch libxslt 2>&1 | tee -a $log_file
 
 #Some Package names are depend on el release
 if [ "$elv" == "5" ]; then
-	yum -y install liberation-fonts | tee -a $log_file
+	yum -y install liberation-fonts 2>&1 | tee -a $log_file
 elif [ "$elv" == "6" ]; then
-	yum -y install liberation-fonts-common pkgconfig liberation-mono-fonts liberation-sans-fonts liberation-serif-fonts | tee -a $log_file
+	yum -y install liberation-fonts-common pkgconfig liberation-mono-fonts liberation-sans-fonts liberation-serif-fonts 2>&1 | tee -a $log_file
 fi
 
-echo "Configuring and Starting some Base Services" | tee -a $log_file
+echo "Configuring and Starting some Base Services" 2>&1 | tee -a $log_file
 for service in rabbitmq-server memcached snmpd mysql; do
-	/sbin/chkconfig $service on | tee -a $log_file
-	/sbin/service $service start | tee -a $log_file
+	/sbin/chkconfig $service on 2>&1 | tee -a $log_file
+	/sbin/service $service start 2>&1 | tee -a $log_file
 done
 
-echo "Configuring MySQL" | tee -a $log_file
-/sbin/service mysql restart | tee -a $log_file
-/usr/bin/mysqladmin -u root password '' | tee -a $log_file
-/usr/bin/mysqladmin -u root -h localhost password '' | tee -a $log_file
+echo "Configuring MySQL" 2>&1 | tee -a $log_file
+/sbin/service mysql restart 2>&1 | tee -a $log_file
+/usr/bin/mysqladmin -u root password '' 2>&1 | tee -a $log_file
+/usr/bin/mysqladmin -u root -h localhost password '' 2>&1 | tee -a $log_file
 
-echo "Installing Zenoss" | tee -a $log_file
-rpm -ivh $zenoss_rpm_file | tee -a $log_file
+echo "Installing Zenoss" 2>&1 | tee -a $log_file
+rpm -ivh $zenoss_rpm_file 2>&1 | tee -a $log_file
 
-/sbin/service zenoss start | tee -a $log_file
+/sbin/service zenoss start 2>&1 | tee -a $log_file
 
-echo "Installing Core ZenPacks" | tee -a $log_file
-rpm -ivh $zenpack_rpm_file | tee -a $log_file
+echo "Installing Core ZenPacks" 2>&1 | tee -a $log_file
+rpm -ivh $zenpack_rpm_file 2>&1 | tee -a $log_file
 
 
-echo "Please remember you can use the new zenpack --fetch command to install most zenpacks into your new core 4 Alpha install" | tee -a $log_file
+echo "Please remember you can use the new zenpack --fetch command to install most zenpacks into your new core 4 Alpha install" 2>&1 | tee -a $log_file
 
 
