@@ -101,7 +101,7 @@ fi
 
 echo "Enabling EPEL Repo" 2>&1 | tee -a $log_file
 if [ `rpm -qa | grep -c -i epel` -eq 0 ];then
-	wget -N $epel_rpm_url 2>&1 | tee -a $log_file
+	wget -N $epel_rpm_url
 	rpm -ivh $epel_rpm_file 2>&1 | tee -a $log_file
 fi
 
@@ -111,7 +111,7 @@ echo "Downloading Files" 2>&1 | tee -a $log_file
 if [ `rpm -qa | grep -c -i jre` -eq 0 ]; then
 	if [ ! -f $jre_file ];then
 		echo "Downloading Oracle JRE" 2>&1 | tee -a $log_file
-		wget -N -O $jre_file $jre_url 2>&1 | tee -a $log_file
+		wget -N -O $jre_file $jre_url
 		chmod +x $jre_file
 	fi
 	if [ `rpm -qa | grep -c jre` -eq 0 ]; then
@@ -128,7 +128,7 @@ if [ $mysql_installed -eq 0 ]; then
 	for file in $mysql_client_rpm $mysql_server_rpm $mysql_shared_rpm;
 	do
 		if [ ! -f $file ];then
-			wget -N http://dev.mysql.com/get/Downloads/MySQL-5.5/$file/from/http://mirror.services.wisc.edu/mysql/ 2>&1 | tee -a $log_file
+			wget -N http://dev.mysql.com/get/Downloads/MySQL-5.5/$file/from/http://mirror.services.wisc.edu/mysql/
 		fi
 		if [ ! -f $file ];then
 			echo "Failed to download $file. I can't continue" 2>&1 | tee -a $log_file
@@ -149,7 +149,7 @@ zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$z
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 for file in $zenoss_rpm_file $zenpack_rpm_file;do
 	if [ ! -f $file ];then
-		wget -N $zenoss_base_url/$file 2>&1 | tee -a $log_file
+		wget -N $zenoss_base_url/$file
 	fi
 done
 
