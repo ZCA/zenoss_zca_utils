@@ -43,7 +43,7 @@ fi
 echo "Ensuring This server is in a clean state before we start" 2>&1 | tee -a $log_file
 mysql_installed=0
 if [ `rpm -qa | egrep -c -i "^mysql-(libs|server)?"` -gt 0 ]; then
-	if [ `rpm -qa | egrep -i "^mysql-(libs|server)?" | grep -c -v 5.5` -gt 0 ]; then
+	if [ `rpm -qa | egrep -i "^mysql-server" | grep -c -v 5.5` -gt 0 ]; then
 		echo "It appears you already have an older version of MySQL server installed" 2>&1 | tee -a $log_file
 		echo "I'm to scared to continue. Please remove the following existing MySQL Packages:" 2>&1 | tee -a $log_file
 		rpm -qa | egrep -i "^mysql-(libs|server)?" 2>&1 | tee -a $log_file
