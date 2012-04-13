@@ -36,10 +36,11 @@ fi
 
 echo "Ensuring This server is in a clean state before we start"
 mysql_installed=0
-if [ `rpm -qa | grep -c -i mysql-server` -gt 0 ]; then
-	if [ `rpm -qa | grep -i mysql-server | grep -c -v 5.5` -gt 0 ]; then
+if [ `rpm -qa | egrep -i "^mysql-(libs|server)?"` -gt 0 ]; then
+	if [ `rpm -qa | egrep -i "^mysql-(libs|server)?" | grep -c -v 5.5` -gt 0 ]; then
 		echo "It appears you already have an older version of MySQL server installed"
-		echo "I'm to scared to continue. Please remove existing MySQL Packages"
+		echo "I'm to scared to continue. Please remove the following existing MySQL Packages:"
+		rpm -qa | egrep -i "^mysql-(libs|server)?"
 		exit 1
 	else
 		echo "It appears MySQL 5.5 is already installed. MySQL Installation  will be skipped"
