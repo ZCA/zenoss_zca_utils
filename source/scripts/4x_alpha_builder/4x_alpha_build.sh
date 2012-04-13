@@ -168,7 +168,7 @@ fi
 
 echo "Installing Required Packages"
 yum -y install tk unixODBC erlang rabbitmq-server memcached perl-DBI net-snmp \
-net-snmp-utils gmp libgomp libgcj.$arch libxslt
+net-snmp-utils gmp libgomp libgcj.$arch libxslt dmidecode
 
 #Some Package names are depend on el release
 if [ "$elv" == "5" ]; then
