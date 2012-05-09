@@ -12,7 +12,7 @@
 
 # Defaults for user provided input
 major="4.1.70"
-build="1494"
+build="1503"
 latest_zenoss_build="$major-$build"
 default_arch="x86_64"
 
@@ -84,7 +84,7 @@ if [ "$arch" = "x86_64" ]; then
 	mysql_server_rpm="MySQL-server-$mysql_v-1.linux2.6.x86_64.rpm"
 	mysql_shared_rpm="MySQL-shared-$mysql_v-1.linux2.6.x86_64.rpm"
 	#rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.x86_64.rpm"
-	epel_rpm_file=epel-release-6-5.noarch.rpm
+	epel_rpm_file=epel-release-6-6.noarch.rpm
 	epel_rpm_url=http://download.fedoraproject.org/pub/epel/6/i386/$epel_rpm_file
 	
 elif [ "$arch" = "i386" ]; then
