@@ -16,7 +16,7 @@ build="1503"
 latest_zenoss_build="$major-$build"
 default_arch="x86_64"
 
-mysql_v="5.5.23"
+mysql_v="5.5.24"
 
 echo "Attempting to Install Zenoss $latest_zenoss_build and components"
 
