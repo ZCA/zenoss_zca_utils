@@ -10,13 +10,36 @@
 #
 ###################################################
 
+try() {
+	"$@"
+	if [ $? -ne 0 ]; then
+		echo "Command failure: $@"
+		exit 1
+	fi
+}
+
 # Defaults for user provided input
 major="4.1.70"
 build="1503"
 latest_zenoss_build="$major-$build"
 default_arch="x86_64"
+# ftp mirror for MySQL to use for version auto-detection:
+mysql_ftp_mirror="ftp://mirror.anl.gov/pub/mysql/Downloads/MySQL-5.5/"
 
-mysql_v="5.5.24"
+cd /tmp
+
+echo "Auto-detecting most recent MySQL Community release"
+try rm -f .listing
+try wget --no-remove-listing $mysql_ftp_mirror >/dev/null 2>&1
+mysql_v=`cat .listing | awk '{ print $9 }' | grep MySQL-client | grep el6.x86_64.rpm | sort | tail -n 1`
+# tweaks to isolate MySQL version:
+mysql_v="${mysql_v##MySQL-client-}"
+mysql_v="${mysql_v%%.el6.*}"
+if [ "${mysql_v:0:1}" != "5" ]; then
+	# sanity check
+	mysql_v="5.5.24"
+fi
+rm -f .listing
 
 echo "Attempting to Install Zenoss $latest_zenoss_build and components"
 
@@ -36,14 +59,12 @@ else
 	zenoss_build=$2
 fi
 
-
-
 echo "Ensuring This server is in a clean state before we start"
 mysql_installed=0
 if [ `rpm -qa | egrep -c -i "^mysql-(libs|server)?"` -gt 0 ]; then
 	if [ `rpm -qa | egrep -i "^mysql-(libs|server)?" | grep -c -v 5.5` -gt 0 ]; then
 		echo "It appears you already have an older version of MySQL packages installed"
-		echo "I'm to scared to continue. Please remove the following existing MySQL Packages:"
+		echo "I'm too scared to continue. Please remove the following existing MySQL Packages:"
 		rpm -qa | egrep -i "^mysql-(libs|server)?"
 		exit 1
 	else
@@ -72,7 +93,6 @@ else
 	echo "Unable to determine version. I can't continue"
 	exit 1
 fi
-
 
 # Where to get stuff. Base decisions on arch. Originally I was going to just
 # use the arch variable, but its a little dicey in that file names don't always
@@ -103,22 +123,31 @@ fi
 
 echo "Enabling EPEL Repo"
 if [ `rpm -qa | grep -c -i epel` -eq 0 ];then
-	wget -N $epel_rpm_url
-	rpm -ivh $epel_rpm_file
+	try wget -N $epel_rpm_url
+	try rpm -ivh $epel_rpm_file
 fi
 
-cd /tmp
+echo "Installing Required Packages"
+try yum -y install libaio tk unixODBC erlang rabbitmq-server memcached perl-DBI net-snmp \
+net-snmp-utils gmp libgomp libgcj.$arch libxslt dmidecode sysstat
+
+#Some Package names are depend on el release
+if [ "$elv" == "5" ]; then
+	try yum -y install liberation-fonts
+elif [ "$elv" == "6" ]; then
+	try yum -y install liberation-fonts-common pkgconfig liberation-mono-fonts liberation-sans-fonts liberation-serif-fonts
+fi
 
 echo "Downloading Files"
 if [ `rpm -qa | grep -c -i jre` -eq 0 ]; then
 	if [ ! -f $jre_file ];then
 		echo "Downloading Oracle JRE"
-		wget -N -O $jre_file $jre_url
-		chmod +x $jre_file
+		try wget -N -O $jre_file $jre_url
+		try chmod +x $jre_file
 	fi
 	if [ `rpm -qa | grep -c jre` -eq 0 ]; then
 		echo "Installating JRE"
-		./$jre_file
+		try ./$jre_file
 	fi
 else
 	echo "Appears you already have a JRE installed. I'm not going to install another one"
@@ -130,7 +159,7 @@ if [ $mysql_installed -eq 0 ]; then
 	for file in $mysql_client_rpm $mysql_server_rpm $mysql_shared_rpm;
 	do
 		if [ ! -f $file ];then
-			wget -N http://dev.mysql.com/get/Downloads/MySQL-5.5/$file/from/http://mirror.services.wisc.edu/mysql/
+			try wget -N http://dev.mysql.com/get/Downloads/MySQL-5.5/$file/from/http://mirror.services.wisc.edu/mysql/
 		fi
 		if [ ! -f $file ];then
 			echo "Failed to download $file. I can't continue"
@@ -138,7 +167,7 @@ if [ $mysql_installed -eq 0 ]; then
 		fi
 		rpm_entry=`echo $file | sed s/.x86_64.rpm//g | sed s/.i386.rpm//g | sed s/.i586.rpm//g`
 		if [ `rpm -qa | grep -c $rpm_entry` -eq 0 ];then
-			rpm -ivh $file
+			try rpm -ivh $file
 		fi
 	done
 fi
@@ -151,51 +180,37 @@ zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$z
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 for file in $zenoss_rpm_file $zenpack_rpm_file;do
 	if [ ! -f $file ];then
-		wget -N $zenoss_base_url/$file
+		try wget -N $zenoss_base_url/$file
 	fi
 done
 
-
 if [ `rpm -qa gpg-pubkey* | grep -c "aa5a1ad7-4829c08a"` -eq 0  ];then
 	echo "Importing Zenoss GPG Key"
-	rpm --import $zenoss_gpg_key
+	try rpm --import $zenoss_gpg_key
 fi
-
 
 #echo "Installing Zenoss Dependency Repo"
 #There is no EL6 rpm for this as of now. I'm not even entirelly sure we really need it if we have epel
 #rpm -ivh http://deps.zenoss.com/yum/zenossdeps.el5.noarch.rpm
 
-echo "Installing Required Packages"
-yum -y install tk unixODBC erlang rabbitmq-server memcached perl-DBI net-snmp \
-net-snmp-utils gmp libgomp libgcj.$arch libxslt dmidecode sysstat
-
-#Some Package names are depend on el release
-if [ "$elv" == "5" ]; then
-	yum -y install liberation-fonts
-elif [ "$elv" == "6" ]; then
-	yum -y install liberation-fonts-common pkgconfig liberation-mono-fonts liberation-sans-fonts liberation-serif-fonts
-fi
-
 echo "Configuring and Starting some Base Services"
 for service in rabbitmq-server memcached snmpd mysql; do
-	/sbin/chkconfig $service on
-	/sbin/service $service start
+	try /sbin/chkconfig $service on
+	try /sbin/service $service start
 done
 
 echo "Configuring MySQL"
-/sbin/service mysql restart
-/usr/bin/mysqladmin -u root password ''
-/usr/bin/mysqladmin -u root -h localhost password ''
+try /sbin/service mysql restart
+try /usr/bin/mysqladmin -u root password ''
+try /usr/bin/mysqladmin -u root -h localhost password ''
 
 echo "Installing Zenoss"
-rpm -ivh $zenoss_rpm_file
+try rpm -ivh $zenoss_rpm_file
 
-/sbin/service zenoss start
+try /sbin/service zenoss start
 
 echo "Installing Core ZenPacks"
-rpm -ivh $zenpack_rpm_file
-
+try rpm -ivh $zenpack_rpm_file
 
 echo "Please remember you can use the new zenpack --fetch command to install most zenpacks into your new core 4 Alpha install"
 
