@@ -204,6 +204,21 @@ try /sbin/service mysql restart
 try /usr/bin/mysqladmin -u root password ''
 try /usr/bin/mysqladmin -u root -h localhost password ''
 
+# set up rrdtool, etc.
+
+if [ "$elv" = "6" ]; then
+	echo "Installing rrdtool"
+	try yum -y install xorg-x11-fonts-Type1 ruby libdbi
+	try wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.$arch.rpm
+	try rpm -ivh rpmforge-release-0.5.2-2.el6.rf.$arch.rpm
+	
+	try wget http://pkgs.repoforge.org/rrdtool/rrdtool-1.4.7-1.el6.rfx.$arch.rpm
+	try wget http://pkgs.repoforge.org/rrdtool/perl-rrdtool-1.4.7-1.el6.rfx.$arch.rpm
+
+	try yum -y localinstall rrdtool-1.4.7-1.el6.rfx.$arch.rpm perl-rrdtool-1.4.7-1.el6.rfx.$arch.rpm
+fi
+# TODO: el5 rrdtool install
+
 echo "Installing Zenoss"
 try rpm -ivh $zenoss_rpm_file
 
