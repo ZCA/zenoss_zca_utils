@@ -20,7 +20,7 @@ try() {
 
 # Defaults for user provided input
 major="4.1.70"
-build="1503"
+build="1514"
 latest_zenoss_build="$major-$build"
 default_arch="x86_64"
 # ftp mirror for MySQL to use for version auto-detection:
@@ -100,9 +100,9 @@ fi
 if [ "$arch" = "x86_64" ]; then
 	jre_file="jre-6u31-linux-x64-rpm.bin"
 	jre_url="http://javadl.sun.com/webapps/download/AutoDL?BundleId=59622"
-	mysql_client_rpm="MySQL-client-$mysql_v-1.linux2.6.x86_64.rpm"
-	mysql_server_rpm="MySQL-server-$mysql_v-1.linux2.6.x86_64.rpm"
-	mysql_shared_rpm="MySQL-shared-$mysql_v-1.linux2.6.x86_64.rpm"
+	mysql_client_rpm="MySQL-client-$mysql_v.linux2.6.x86_64.rpm"
+	mysql_server_rpm="MySQL-server-$mysql_v.linux2.6.x86_64.rpm"
+	mysql_shared_rpm="MySQL-shared-$mysql_v.linux2.6.x86_64.rpm"
 	#rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.x86_64.rpm"
 	epel_rpm_file=epel-release-6-6.noarch.rpm
 	epel_rpm_url=http://download.fedoraproject.org/pub/epel/6/i386/$epel_rpm_file
@@ -110,9 +110,9 @@ if [ "$arch" = "x86_64" ]; then
 elif [ "$arch" = "i386" ]; then
 	jre_file="jre-6u31-linux-i586-rpm.bin"
 	jre_url="http://javadl.sun.com/webapps/download/AutoDL?BundleId=59620"
-	mysql_client_rpm="MySQL-client-$mysql_v-1.linux2.6.i386.rpm"
-	mysql_server_rpm="MySQL-server-$mysql_v-1.linux2.6.i386.rpm"
-	mysql_shared_rpm="MySQL-shared-$mysql_v-1.linux2.6.i386.rpm"
+	mysql_client_rpm="MySQL-client-$mysql_v.linux2.6.i386.rpm"
+	mysql_server_rpm="MySQL-server-$mysql_v.linux2.6.i386.rpm"
+	mysql_shared_rpm="MySQL-shared-$mysql_v.linux2.6.i386.rpm"
 	#rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.i386.rpm"
 	epel_rpm_file=epel-release-5-4.noarch.rpm
 	epel_rpm_url=http://dl.fedoraproject.org/pub/epel/5/i386/$epel_rpm_file
@@ -172,7 +172,6 @@ if [ $mysql_installed -eq 0 ]; then
 	done
 fi
 
-echo "Downloading Zenoss RPMs"
 zenoss_arch=$arch
 zenoss_rpm_file="zenoss-$zenoss_build.$els.$zenoss_arch.rpm"
 zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.$els.$zenoss_arch.rpm"
@@ -180,6 +179,7 @@ zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$z
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 for file in $zenoss_rpm_file $zenpack_rpm_file;do
 	if [ ! -f $file ];then
+		echo "Downloading Zenoss RPMs"
 		try wget -N $zenoss_base_url/$file
 	fi
 done
