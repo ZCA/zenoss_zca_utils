@@ -130,7 +130,7 @@ if [ `rpm -qa | grep -c -i epel` -eq 0 ];then
 fi
 
 echo "Enabling repoforge Repo"
-if [ `rpm -qa | grep -c -i rpmforge` -eq ];then
+if [ `rpm -qa | grep -c -i rpmforge` -eq 0 ];then
 	try wget -N $rpmforge_rpm_file
 	try rpm -ivh $rpmforge_rpm_file
 fi
