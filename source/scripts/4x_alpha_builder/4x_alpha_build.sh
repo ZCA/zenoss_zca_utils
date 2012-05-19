@@ -2,7 +2,7 @@
 ####################################################
 #
 # A silly little script to make installing a 
-# Zenoss Core 4.x alpha development/testing machine
+# Zenoss Core 4.x Beta development/testing machine
 # to save me a little time next time a new release is cut
 # VERY Centos/RHEL centric/dependant.
 # Its assumed you are running this on a bare/clean machine
@@ -25,6 +25,8 @@ latest_zenoss_build="$major-$build"
 default_arch="x86_64"
 # ftp mirror for MySQL to use for version auto-detection:
 mysql_ftp_mirror="ftp://mirror.anl.gov/pub/mysql/Downloads/MySQL-5.5/"
+#We have some very specific version requirements for RRDTool
+rrdtool_ver="1.4.7"
 
 cd /tmp
 
@@ -103,7 +105,7 @@ if [ "$arch" = "x86_64" ]; then
 	mysql_client_rpm="MySQL-client-$mysql_v.linux2.6.x86_64.rpm"
 	mysql_server_rpm="MySQL-server-$mysql_v.linux2.6.x86_64.rpm"
 	mysql_shared_rpm="MySQL-shared-$mysql_v.linux2.6.x86_64.rpm"
-	#rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.x86_64.rpm"
+	rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.x86_64.rpm"
 	epel_rpm_file=epel-release-6-6.noarch.rpm
 	epel_rpm_url=http://download.fedoraproject.org/pub/epel/6/i386/$epel_rpm_file
 	
@@ -113,7 +115,7 @@ elif [ "$arch" = "i386" ]; then
 	mysql_client_rpm="MySQL-client-$mysql_v.linux2.6.i386.rpm"
 	mysql_server_rpm="MySQL-server-$mysql_v.linux2.6.i386.rpm"
 	mysql_shared_rpm="MySQL-shared-$mysql_v.linux2.6.i386.rpm"
-	#rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.i386.rpm"
+	rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.i386.rpm"
 	epel_rpm_file=epel-release-5-4.noarch.rpm
 	epel_rpm_url=http://dl.fedoraproject.org/pub/epel/5/i386/$epel_rpm_file
 else
@@ -127,9 +129,15 @@ if [ `rpm -qa | grep -c -i epel` -eq 0 ];then
 	try rpm -ivh $epel_rpm_file
 fi
 
+echo "Enabling repoforge Repo"
+if [ `rpm -qa | grep -c -i rpmforge` -eq ];then
+	try wget -N $rpmforge_rpm_file
+	try rpm -ivh $rpmforge_rpm_file
+fi
+
 echo "Installing Required Packages"
 try yum -y install libaio tk unixODBC erlang rabbitmq-server memcached perl-DBI net-snmp \
-net-snmp-utils gmp libgomp libgcj.$arch libxslt dmidecode sysstat
+net-snmp-utils gmp libgomp libgcj.$arch libxslt dmidecode sysstat xorg-x11-fonts-Type1 ruby libdbi
 
 #Some Package names are depend on el release
 if [ "$elv" == "5" ]; then
@@ -138,7 +146,16 @@ elif [ "$elv" == "6" ]; then
 	try yum -y install liberation-fonts-common pkgconfig liberation-mono-fonts liberation-sans-fonts liberation-serif-fonts
 fi
 
-echo "Downloading Files"
+echo "Installing RRD Tools"
+if [ `rpm -qa | grep -c -i rrdtool` -eq 0 ]; then
+	rrdtool_loc="http://pkgs.repoforge.org/rrdtool"
+	try wget $rrdtool_loc/rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
+	try wget $rrdtool_loc/perl-rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
+	try yum -y localinstall rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm perl-rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
+else
+	echo "You already have rrdtool installed. Taking no action"
+fi
+
 if [ `rpm -qa | grep -c -i jre` -eq 0 ]; then
 	if [ ! -f $jre_file ];then
 		echo "Downloading Oracle JRE"
@@ -175,7 +192,7 @@ fi
 zenoss_arch=$arch
 zenoss_rpm_file="zenoss-$zenoss_build.$els.$zenoss_arch.rpm"
 zenpack_rpm_file="zenoss-core-zenpacks-$zenoss_build.$els.$zenoss_arch.rpm"
-zenoss_base_url="http://downloads.sourceforge.net/project/zenoss/zenoss-alpha/$zenoss_build"
+zenoss_base_url="http://sourceforge.net/projects/zenoss/files/zenoss-beta/builds/$zenoss_build"
 zenoss_gpg_key="http://dev.zenoss.org/yum/RPM-GPG-KEY-zenoss"
 for file in $zenoss_rpm_file $zenpack_rpm_file;do
 	if [ ! -f $file ];then
@@ -203,21 +220,6 @@ echo "Configuring MySQL"
 try /sbin/service mysql restart
 try /usr/bin/mysqladmin -u root password ''
 try /usr/bin/mysqladmin -u root -h localhost password ''
-
-# set up rrdtool, etc.
-
-if [ "$elv" = "6" ]; then
-	echo "Installing rrdtool"
-	try yum -y install xorg-x11-fonts-Type1 ruby libdbi
-	try wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.$arch.rpm
-	try rpm -ivh rpmforge-release-0.5.2-2.el6.rf.$arch.rpm
-	
-	try wget http://pkgs.repoforge.org/rrdtool/rrdtool-1.4.7-1.el6.rfx.$arch.rpm
-	try wget http://pkgs.repoforge.org/rrdtool/perl-rrdtool-1.4.7-1.el6.rfx.$arch.rpm
-
-	try yum -y localinstall rrdtool-1.4.7-1.el6.rfx.$arch.rpm perl-rrdtool-1.4.7-1.el6.rfx.$arch.rpm
-fi
-# TODO: el5 rrdtool install
 
 echo "Installing Zenoss"
 try rpm -ivh $zenoss_rpm_file
