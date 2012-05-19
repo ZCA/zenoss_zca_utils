@@ -19,9 +19,17 @@ try() {
 }
 
 # Defaults for user provided input
-major="4.1.70"
-build="1518"
-latest_zenoss_build="$major-$build"
+#Old way of setting version info
+#	major="4.1.70"
+#	build="1518"
+#	latest_zenoss_build="$major-$build"
+#New way....
+echo "Determining Latest Zenoss Build"
+ver_file=".zenver"
+wget -O $ver_file http://sourceforge.net/projects/zenoss/files/zenoss-beta/builds/%2B/download
+latest_zenoss_build=`cat $ver_file`
+echo $latest_zenoss_build
+
 default_arch="x86_64"
 # ftp mirror for MySQL to use for version auto-detection:
 mysql_ftp_mirror="ftp://mirror.anl.gov/pub/mysql/Downloads/MySQL-5.5/"
