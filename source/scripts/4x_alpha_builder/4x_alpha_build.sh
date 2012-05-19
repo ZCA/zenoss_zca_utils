@@ -106,8 +106,6 @@ if [ "$arch" = "x86_64" ]; then
 	mysql_server_rpm="MySQL-server-$mysql_v.linux2.6.x86_64.rpm"
 	mysql_shared_rpm="MySQL-shared-$mysql_v.linux2.6.x86_64.rpm"
 	rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.x86_64.rpm"
-	epel_rpm_file=epel-release-6-6.noarch.rpm
-	epel_rpm_url=http://download.fedoraproject.org/pub/epel/6/i386/$epel_rpm_file
 	
 elif [ "$arch" = "i386" ]; then
 	jre_file="jre-6u31-linux-i586-rpm.bin"
@@ -116,15 +114,25 @@ elif [ "$arch" = "i386" ]; then
 	mysql_server_rpm="MySQL-server-$mysql_v.linux2.6.i386.rpm"
 	mysql_shared_rpm="MySQL-shared-$mysql_v.linux2.6.i386.rpm"
 	rpmforge_rpm_file="rpmforge-release-0.5.2-2.$els.rf.i386.rpm"
-	epel_rpm_file=epel-release-5-4.noarch.rpm
-	epel_rpm_url=http://dl.fedoraproject.org/pub/epel/5/i386/$epel_rpm_file
 else
 	echo "Don't know where to get files for arch $arch"
 	exit 1
 fi
 
+#Set some things that are EL version specific
+if [ "$elv" == "5" ]; then
+	epel_rpm_file=epel-release-5-4.noarch.rpm
+	rrdtool_rpm=rrdtool-$rrdtool_ver-1.el$elv.rf.$arch.rpm
+	perl_rrdtool_rpm=perl-rrdtool-$rrdtool_ver-1.el$elv.rf.$arch.rpm
+elif [ "$elv" == "6" ]; then
+	epel_rpm_file=epel-release-6-6.noarch.rpm
+	rrdtool_rpm=rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
+	perl_rrdtool_rpm=perl-rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
+fi
+
 echo "Enabling EPEL Repo"
 if [ `rpm -qa | grep -c -i epel` -eq 0 ];then
+	epel_rpm_url=http://download.fedoraproject.org/pub/epel/$elv/i386/$epel_rpm_file
 	try wget -N $epel_rpm_url
 	try rpm -ivh $epel_rpm_file
 fi
@@ -149,9 +157,9 @@ fi
 echo "Installing RRD Tools"
 if [ `rpm -qa | grep -c -i rrdtool` -eq 0 ]; then
 	rrdtool_loc="http://pkgs.repoforge.org/rrdtool"
-	try wget $rrdtool_loc/rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
-	try wget $rrdtool_loc/perl-rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
-	try yum -y localinstall rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm perl-rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
+	try wget $rrdtool_loc/$rrdtool_rpm
+	try wget $rrdtool_loc/$perl_rrdtool_rpm
+	try yum -y localinstall $rrdtool_rpm $perl_rrdtool_rpm
 else
 	echo "You already have rrdtool installed. Taking no action"
 fi
