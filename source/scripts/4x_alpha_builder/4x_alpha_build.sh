@@ -131,7 +131,7 @@ fi
 
 echo "Enabling repoforge Repo"
 if [ `rpm -qa | grep -c -i rpmforge` -eq 0 ];then
-	try wget -N $rpmforge_rpm_file
+	try wget -N http://pkgs.repoforge.org/rpmforge-release/$rpmforge_rpm_file
 	try rpm -ivh $rpmforge_rpm_file
 fi
 
