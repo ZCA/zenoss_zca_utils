@@ -18,6 +18,8 @@ try() {
 	fi
 }
 
+
+
 # Defaults for user provided input
 #Old way of setting version info
 #	major="4.1.70"
@@ -30,11 +32,25 @@ wget -O $ver_file http://sourceforge.net/projects/zenoss/files/zenoss-beta/build
 latest_zenoss_build=`cat $ver_file`
 echo $latest_zenoss_build
 
+
 default_arch="x86_64"
 # ftp mirror for MySQL to use for version auto-detection:
 mysql_ftp_mirror="ftp://mirror.anl.gov/pub/mysql/Downloads/MySQL-5.5/"
 #We have some very specific version requirements for RRDTool
 rrdtool_ver="1.4.7"
+
+#Handle iptables
+if [ `service iptables status | grep -c Table` -eq 1 ];then
+	echo "Appears You have iptables enabled"
+	if [ `service iptables status | grep 8080 | grep -c ACCEPT` -eq 0 ];then
+		echo "It doesn't look like you currently allow port 8080"
+		echo "I'm opening port 8080, so you'll be able to access the Zenoss Web UI on this host"
+		try iptables -I INPUT -p tcp --dport 8080 -j ACCEPT
+		try service iptables save
+	else
+		echo "8080 is already enabled, I'm not making any changes to iptables"
+	fi
+fi
 
 cd /tmp
 
