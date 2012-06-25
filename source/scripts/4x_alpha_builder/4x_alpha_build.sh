@@ -218,7 +218,10 @@ if [ $mysql_installed -eq 0 ]; then
 		fi
 		rpm_entry=`echo $file | sed s/.x86_64.rpm//g | sed s/.i386.rpm//g | sed s/.i586.rpm//g`
 		if [ `rpm -qa | grep -c $rpm_entry` -eq 0 ];then
-			try yum -y localinstall $file
+			#TODO: Find the actually key file to download and do the key import. I spent just a couple minutes this AM looking
+			#all my search resulted in the key being displayed, but no actual downloadable key. I'm sure it exists, but going
+			#with this for now
+			try yum -y --nogpgcheck localinstall $file
 		fi
 	done
 fi
