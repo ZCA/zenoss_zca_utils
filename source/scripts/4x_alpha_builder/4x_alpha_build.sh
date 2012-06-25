@@ -146,16 +146,20 @@ fi
 #Set some things that are EL version specific
 if [ "$elv" == "5" ]; then
 	epel_rpm_file=epel-release-5-4.noarch.rpm
+	epel_gpg_key="https://fedoraproject.org/static/217521F6"
 	rrdtool_rpm=rrdtool-$rrdtool_ver-1.el$elv.rf.$arch.rpm
 	perl_rrdtool_rpm=perl-rrdtool-$rrdtool_ver-1.el$elv.rf.$arch.rpm
 elif [ "$elv" == "6" ]; then
 	epel_rpm_file=epel-release-6-7.noarch.rpm
+	epel_gpg_key="https://fedoraproject.org/static/0608B895.txt"
 	rrdtool_rpm=rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
 	perl_rrdtool_rpm=perl-rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
 fi
 
 echo "Enabling EPEL Repo"
 if [ `rpm -qa | grep -c -i epel` -eq 0 ];then
+	#Import the Key
+	rpm --import $epel_gpg_key
 	epel_rpm_url=http://download.fedoraproject.org/pub/epel/$elv/i386/$epel_rpm_file
 	try wget -N $epel_rpm_url
 	try yum -y localinstall $epel_rpm_file
