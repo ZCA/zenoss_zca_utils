@@ -164,6 +164,8 @@ fi
 echo "Enabling repoforge Repo"
 if [ `rpm -qa | grep -c -i rpmforge` -eq 0 ];then
 	try wget -N http://pkgs.repoforge.org/rpmforge-release/$rpmforge_rpm_file
+	#Import Dags Key - http://wiki.centos.org/AdditionalResources/Repositories/RPMForge
+	try rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt
 	try yum -y localinstall $rpmforge_rpm_file
 fi
 
