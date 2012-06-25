@@ -149,7 +149,7 @@ if [ "$elv" == "5" ]; then
 	rrdtool_rpm=rrdtool-$rrdtool_ver-1.el$elv.rf.$arch.rpm
 	perl_rrdtool_rpm=perl-rrdtool-$rrdtool_ver-1.el$elv.rf.$arch.rpm
 elif [ "$elv" == "6" ]; then
-	epel_rpm_file=epel-release-6-6.noarch.rpm
+	epel_rpm_file=epel-release-6-7.noarch.rpm
 	rrdtool_rpm=rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
 	perl_rrdtool_rpm=perl-rrdtool-$rrdtool_ver-1.el$elv.rfx.$arch.rpm
 fi
@@ -158,13 +158,13 @@ echo "Enabling EPEL Repo"
 if [ `rpm -qa | grep -c -i epel` -eq 0 ];then
 	epel_rpm_url=http://download.fedoraproject.org/pub/epel/$elv/i386/$epel_rpm_file
 	try wget -N $epel_rpm_url
-	try rpm -ivh $epel_rpm_file
+	try yum -y localinstall $epel_rpm_file
 fi
 
 echo "Enabling repoforge Repo"
 if [ `rpm -qa | grep -c -i rpmforge` -eq 0 ];then
 	try wget -N http://pkgs.repoforge.org/rpmforge-release/$rpmforge_rpm_file
-	try rpm -ivh $rpmforge_rpm_file
+	try yum -y localinstall $rpmforge_rpm_file
 fi
 
 echo "Installing Required Packages"
@@ -216,7 +216,7 @@ if [ $mysql_installed -eq 0 ]; then
 		fi
 		rpm_entry=`echo $file | sed s/.x86_64.rpm//g | sed s/.i386.rpm//g | sed s/.i586.rpm//g`
 		if [ `rpm -qa | grep -c $rpm_entry` -eq 0 ];then
-			try rpm -ivh $file
+			try yum -y localinstall $file
 		fi
 	done
 fi
@@ -254,12 +254,12 @@ try /usr/bin/mysqladmin -u root password ''
 try /usr/bin/mysqladmin -u root -h localhost password ''
 
 echo "Installing Zenoss"
-try rpm -ivh $zenoss_rpm_file
+try yum -y localinstall $zenoss_rpm_file --disablerepo=rpmforge
 
 try /sbin/service zenoss start
 
 echo "Installing Core ZenPacks"
-try rpm -ivh $zenpack_rpm_file
+try yum -y localinstall $zenpack_rpm_file
 
 echo "Please remember you can use the new zenpack --fetch command to install most zenpacks into your new core 4 Alpha install"
 
